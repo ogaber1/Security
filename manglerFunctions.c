@@ -3,7 +3,6 @@
 
 uint64_t expansion_permutation(uint32_t R) {
     uint64_t output = 0;
-    //
     // Row 1: DES bits [32, 1, 2, 3, 4, 5] -> Output positions [47-42]
     output |= ((uint64_t)(R & 0x01)) << 47;           // bit 32
     output |= ((uint64_t)((R >> 27) & 0x1F)) << 42;   // bits 1-5
@@ -27,7 +26,6 @@ uint64_t expansion_permutation(uint32_t R) {
     output |= ((uint64_t)((R >> 3) & 0x3F)) << 6;
 
     // Row 8: DES bits [28, 29, 30, 31, 32, 1] -> Output positions [5-0]
-    // Need: bits 28-32 (5 bits) at positions 5-1, and bit 1 at position 0
     output |= ((uint64_t)(R & 0x1F)) << 1;            // bits 28-32 at positions 5-1
     output |= ((uint64_t)((R >> 31) & 0x01));         // bit 1 at position 0
 

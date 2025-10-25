@@ -4,7 +4,7 @@
 
 int main(void) {
 
-    uint32_t input = 0xF0AAF0AA;
+    uint32_t input = 0x80000000;
 
     printf("Input (32 bits): 0x%08X\n", input);
     printf("Binary: \n");
