@@ -1,6 +1,8 @@
 #include "manglerFunctions.h"
 #include <stdio.h>
 
+
+//  Main Functions
 uint64_t expansion_permutation(uint32_t R) {
     uint64_t output = 0;
     // Row 1: DES bits [32, 1, 2, 3, 4, 5] -> Output positions [47-42]
@@ -31,7 +33,53 @@ uint64_t expansion_permutation(uint32_t R) {
 
     return output;
 }
+uint32_t p_box_permutation(uint32_t input) {
+    uint32_t output = 0;
+    // Manual bit by bit shifting is the fastest? all operations at compile time so pretty fast, faster than loop but idk if a lookup table would help.
 
+    // P-box table: [16, 7, 20, 21, 29, 12, 28, 17, 1, 15, 23, 26, 5, 18, 31, 10, 2, 8, 24, 14, 32, 27, 3, 9, 19, 13, 30, 6, 22, 11, 4, 25]
+    // 32 is the LSB, 1 is the MSB
+
+    output |= ((input >> 16) & 1) << 31;  // bit 16 → position 0
+    output |= ((input >> 25) & 1) << 30;
+    output |= ((input >> 12) & 1) << 29;
+    output |= ((input >> 11) & 1) << 28;
+    output |= ((input >> 3) & 1) << 27;
+    output |= ((input >> 20) & 1) << 26;
+    output |= ((input >> 4) & 1) << 25;
+    output |= ((input >> 15) & 1) << 24;
+
+    output |= ((input >> 31) & 1) << 23;
+    output |= ((input >> 17) & 1) << 22;
+    output |= ((input >> 9) & 1) << 21;
+    output |= ((input >> 6) & 1) << 20;
+    output |= ((input >> 27) & 1) << 19;
+    output |= ((input >> 14) & 1) << 18;
+    output |= ((input >> 1) & 1) << 17;
+    output |= ((input >> 22) & 1) << 16;
+
+    output |= ((input >> 30) & 1) << 15;
+    output |= ((input >> 24) & 1) << 14;
+    output |= ((input >> 8) & 1) << 13;
+    output |= ((input >> 18) & 1) << 12;
+    output |= ((input >> 32) & 1) << 11;
+    output |= ((input >> 5) & 1) << 10;
+    output |= ((input >> 29) & 1) << 9;
+    output |= ((input >> 23) & 1) << 8;
+
+    output |= ((input >> 13) & 1) << 7;
+    output |= ((input >> 19) & 1) << 6;
+    output |= ((input >> 2) & 1) << 5;
+    output |= ((input >> 26) & 1) << 4;
+    output |= ((input >> 10) & 1) << 3;
+    output |= ((input >> 21) & 1) << 2;
+    output |= ((input >> 28) & 1) << 1;
+    output |= ((input >> 7) & 1) << 0;
+
+    return output;
+}
+
+// Helper Functions
 void print_binary_32(uint32_t n) {
     for (int i = 31; i >= 0; i--) {
         printf("%d ", (n >> i) & 1);
