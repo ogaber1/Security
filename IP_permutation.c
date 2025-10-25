@@ -3,7 +3,7 @@
 //
 
 #include "IP_permutation.h"
-static inline uint64_t initial_permutation(uint64_t block)
+inline uint64_t initial_permutation(uint64_t block)
 {
     uint32_t left  = (uint32_t)(block >> 32);
     uint32_t right = (uint32_t)(block & 0xFFFFFFFFU);
@@ -35,4 +35,5 @@ static inline uint64_t initial_permutation(uint64_t block)
     left  ^= (u << 1);
 
     return ((uint64_t)left << 32) | (uint64_t)right;
+
 }
