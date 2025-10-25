@@ -5,5 +5,6 @@
 
 #ifndef IP_PERMUTATION_H
 #define IP_PERMUTATION_H
-static inline uint64_t initial_permutation(uint64_t block);
+uint64_t initial_permutation(uint64_t block);
 #endif //IP_PERMUTATION_H
+
