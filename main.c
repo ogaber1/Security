@@ -4,7 +4,6 @@
 #define plaintext 0x4E6F772069732074
 #define k 0x0123456789ABCDEF
 
-
     // Permuted choice 1 (PC-1) table
      const int PC1[] = {
          57,49,41,33,25,17,9,1,58,50,42,34,26,18,
@@ -26,7 +25,6 @@
         };
 
     uint64_t keys[16];
-
 
     // The 8 S-boxes
     const int S_BOX[8][4][16] = {
@@ -88,14 +86,13 @@
         }
     };
 
-
+    void key_gen(uint64_t key);
     uint64_t encrypt(uint64_t p);
     uint64_t decrypt(uint64_t c);
     uint64_t initial_permutation(uint64_t block);
     uint64_t Permuted_ch1(uint64_t key64);
-    uint64_t Shift_circular(uint64_t key56,int round_no) ;
+    uint64_t Shift_circular(uint64_t key56,int round_no);
     uint64_t Permuted_ch2(uint64_t key56);
-    void key_gen(uint64_t key);
     uint64_t expansion_permutation(uint32_t R);
     uint32_t p_box_permutation(uint32_t input);
     uint32_t s_box_substitution(uint64_t input_48bits);
@@ -103,7 +100,7 @@
     uint64_t swap(uint64_t block);
 
 
-int main(void) {
+int main(int argc, char **argv) {
 
     key_gen(k);
     uint64_t cipher = encrypt(plaintext);
@@ -111,9 +108,16 @@ int main(void) {
     printf("Output = 0x%016llx\n", (unsigned long long)decrypt(cipher));
 
     return 0;
+    }
+    void key_gen(uint64_t key) {
+    uint64_t key56 = Permuted_ch1(key);
+    uint64_t c_and_d = key56;
+
+    for (int i = 0; i < 16; i++) {
+        c_and_d = Shift_circular(c_and_d, i + 1);  // shift by the i-th round amount
+        keys[i] = Permuted_ch2(c_and_d);
+    }
 }
-
-
     uint64_t encrypt(uint64_t p){
         uint64_t output_initial_permutation= initial_permutation(p);
 
@@ -228,16 +232,6 @@ int main(void) {
         }
         return out_key_48;
     }
-    void key_gen(uint64_t key) {
-        uint64_t key56 = Permuted_ch1(key);
-        uint64_t c_and_d = key56;
-
-        for (int i = 0; i < 16; i++) {
-            c_and_d = Shift_circular(c_and_d, i + 1);  // shift by the i-th round amount
-            keys[i] = Permuted_ch2(c_and_d);
-        }
-    }
-    //  Main Functions
     uint64_t expansion_permutation(uint32_t R) {
         uint64_t output = 0;
         // Row 1: DES bits [32, 1, 2, 3, 4, 5] -> Output positions [47-42]
