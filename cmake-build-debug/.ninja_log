@@ -1,0 +1,23 @@
+# ninja log v6
+23	181	7833976168117929	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+182	353	7833976169720681	untitled.exe	c1fec59e6ee2e1f2
+86	204	7833933016173944	CMakeFiles/untitled.dir/swap.c.obj	ad00eccde4e3ce8
+67	216	7833933015989681	CMakeFiles/untitled.dir/manglerFunctions.c.obj	8926743981869682
+79	202	7833933016106516	CMakeFiles/untitled.dir/inverse_permutation.c.obj	833ab8474d5c358a
+48	551	7834117675388721	build.ninja	8de375a261911ae2
+73	205	7833933016050313	CMakeFiles/untitled.dir/IP_permutation.c.obj	548edafd19679a19
+92	228	7833933016231651	CMakeFiles/untitled.dir/key_scheduling.c.obj	4f2824f979cb7159
+250	521	7835664701260577	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+522	1424	7835664703964433	untitled.exe	c1fec59e6ee2e1f2
+3	112	7835665155383557	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+112	225	7835665156471571	untitled.exe	c1fec59e6ee2e1f2
+5	109	7835666232565082	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+110	230	7835666233616928	untitled.exe	c1fec59e6ee2e1f2
+16	137	7835672988170997	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+137	270	7835672989389524	untitled.exe	c1fec59e6ee2e1f2
+5	126	7835674989515431	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+127	259	7835674990726493	untitled.exe	c1fec59e6ee2e1f2
+16	156	7835681538945468	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+157	319	7835681540352254	untitled.exe	c1fec59e6ee2e1f2
+4	127	7835682194893336	CMakeFiles/untitled.dir/main.c.obj	306538b9641c8c82
+128	251	7835682196119992	untitled.exe	c1fec59e6ee2e1f2

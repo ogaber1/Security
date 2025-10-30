@@ -3,7 +3,17 @@
 
 #define plaintext 0x4E6F772069732074
 #define k 0x0123456789ABCDEF
-
+uint64_t swap_bytes(uint64_t x) {
+    x = ((x & 0x00000000000000FFULL) << 56) |
+        ((x & 0x000000000000FF00ULL) << 40) |
+        ((x & 0x0000000000FF0000ULL) << 24) |
+        ((x & 0x00000000FF000000ULL) << 8)  |
+        ((x & 0x000000FF00000000ULL) >> 8)  |
+        ((x & 0x0000FF0000000000ULL) >> 24) |
+        ((x & 0x00FF000000000000ULL) >> 40) |
+        ((x & 0xFF00000000000000ULL) >> 56);
+    return x;
+}
     // Permuted choice 1 (PC-1) table
      const int PC1[] = {
          57,49,41,33,25,17,9,1,58,50,42,34,26,18,
@@ -100,16 +110,81 @@
     uint64_t swap(uint64_t block);
 
 
-int main(int argc, char **argv) {
+int main(void) {
+    FILE *fp_key,*fp_input,*fp_output;
+    // key_handling
+    fp_key = fopen("key.bin", "rb"); // Open for reading in binary mode
+    if (fp_key == NULL) {
+        // Handle error: file could not be opened
+        printf("Error opening file\n");
+        return 1;
+    }
+    uint64_t key64 = 0;
+    fread(&key64, sizeof(uint64_t), 1, fp_key);
+    key64 = swap_bytes(key64);
+    printf("Key = 0x%016llx\n", (unsigned long long)key64);
+    key_gen(key64);
+    // for(int i=0;i<16;i++) {
+    //     printf("test = 0x%016llx\n", (unsigned long long)keys[i]);
+    // }
+    //input text handling
+    fp_input = fopen("input.bin", "rb"); // Open for reading in binary mode
+    if (fp_input == NULL) {
+        // Handle error: file could not be opened
+        printf("Error opening file\n");
+        return 1;
+    }
+    // output file handling
+    fp_output = fopen("data.bin", "wb"); // Open for writing in binary mode
+    if (fp_output == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
 
-    key_gen(k);
-    uint64_t cipher = encrypt(plaintext);
-    printf("Output = 0x%016llx\n", (unsigned long long)cipher);
-    printf("Output = 0x%016llx\n", (unsigned long long)decrypt(cipher));
+    unsigned char block[8]; // as each block contains 8 bytes
+    size_t bytesRead;
+    while ((bytesRead = fread(block, 1, 8, fp_input)) == 8) {
+        uint64_t block64 = 0;
+        // Combine 8 bytes into one 64-bit block
+        for (int i = 0; i < 8; ++i)
+            block64 = (block64 << 8) | block[i];
+        // Now you can pass block64 to your DES encryption function
+        printf("Block_64 = 0x%016llx\n", (unsigned long long)block64);
+        uint64_t cipher = encrypt(block64);
+        fwrite(&cipher, sizeof(uint64_t), 1, fp_output);
+        printf("cipher text = 0x%016llx\n", (unsigned long long)cipher);
+        //printf("plain text = 0x%016llx\n", (unsigned long long)decrypt(cipher));
+        // (If decrypting, call DES_decrypt_block instead)
+    }
+    // Close output first so we can reopen it for reading
+    fclose(fp_output);
+
+    // Reopen the output file for reading
+    FILE *fp_read_output = fopen("data.bin", "rb");
+    if (fp_read_output == NULL) {
+        printf("Error opening output file for reading\n");
+        return 1;
+    }
+
+    printf("\n--- Ciphertext blocks (from data.bin) ---\n");
+
+    uint64_t cipher_block;
+    while (fread(&cipher_block, sizeof(uint64_t), 1, fp_read_output) == 1) {
+        // Swap if you did byte swapping earlier
+        // cipher_block = swap_bytes(cipher_block);
+        printf("Cipher block = 0x%016llx\n", (unsigned long long)cipher_block);
+    }
+
+    fclose(fp_read_output);
+
+
+
+    // printf("Output = 0x%016llx\n", (unsigned long long)decrypt(cipher));
 
     return 0;
-    }
-    void key_gen(uint64_t key) {
+}
+
+void key_gen(uint64_t key) {
     uint64_t key56 = Permuted_ch1(key);
     uint64_t c_and_d = key56;
 
