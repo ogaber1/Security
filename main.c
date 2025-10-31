@@ -111,12 +111,12 @@ uint64_t swap_bytes(uint64_t x) {
 
 
 int main(int argc, char **argv) {
-    if (argc != 5) {
-        printf("Usage:\n");
-        printf("  %s e keyfile inputfile outputfile\n", argv[0]);
-        printf("  %s d keyfile inputfile outputfile\n", argv[0]);
-        return 1;
-    }
+    // if (argc != 5) {
+    //     printf("Usage:\n");
+    //     printf("  %s e keyfile inputfile outputfile\n", argv[0]);
+    //     printf("  %s d keyfile inputfile outputfile\n", argv[0]);
+    //     return 1;
+    // }
 
     char mode = argv[1][0]; // 'e' or 'd'
     const char *key_filename = argv[2];
@@ -125,52 +125,52 @@ int main(int argc, char **argv) {
 
     FILE *fp_key, *fp_input, *fp_output;
 
-    // Validate mode
-    if (mode != 'e' && mode != 'E' && mode != 'd' && mode != 'D') {
-        printf("Error: Mode must be 'e' for encryption or 'd' for decryption\n");
-        return 1;
-    }
+    // // Validate mode
+    // if (mode != 'e' && mode != 'E' && mode != 'd' && mode != 'D') {
+    //     printf("Error: Mode must be 'e' for encryption or 'd' for decryption\n");
+    //     return 1;
+    // }
 
     // key_handling
     fp_key = fopen(key_filename, "rb");
-    if (fp_key == NULL) {
-        printf("Error opening key file: %s\n", key_filename);
-        return 1;
-    }
+    // if (fp_key == NULL) {
+    //     printf("Error opening key file: %s\n", key_filename);
+    //     return 1;
+    // }
 
     uint64_t key64 = 0;
     fread(&key64, sizeof(uint64_t), 1, fp_key);
     fclose(fp_key);
 
     key64 = swap_bytes(key64);
-    printf("Key = 0x%016llx\n\n", (unsigned long long)key64);
+    // printf("Key = 0x%016llx\n\n", (unsigned long long)key64);
     key_gen(key64);
 
     // input text handling
     fp_input = fopen(input_filename, "rb");
-    if (fp_input == NULL) {
-        printf("Error opening input file: %s\n", input_filename);
-        return 1;
-    }
+    // if (fp_input == NULL) {
+    //     printf("Error opening input file: %s\n", input_filename);
+    //     return 1;
+    // }
 
     // output file handling
     fp_output = fopen(output_filename, "wb");
-    if (fp_output == NULL) {
-        printf("Error opening output file: %s\n", output_filename);
-        fclose(fp_input);
-        return 1;
-    }
+    // if (fp_output == NULL) {
+    //     printf("Error opening output file: %s\n", output_filename);
+    //     fclose(fp_input);
+    //     return 1;
+    // }
 
     unsigned char block[8];
     size_t bytesRead;
     int blockNum = 0;
 
     // Print header for concatenated output
-    if (mode == 'e' || mode == 'E') {
-        printf("Ciphertext (hex): ");
-    } else {
-        printf("Plaintext (hex): ");
-    }
+    // if (mode == 'e' || mode == 'E') {
+    //     printf("Ciphertext (hex): ");
+    // } else {
+    //     printf("Plaintext (hex): ");
+    // }
 
     while ((bytesRead = fread(block, 1, 8, fp_input)) == 8) {
         blockNum++;
@@ -189,8 +189,8 @@ int main(int argc, char **argv) {
             result = decrypt(block64);
         }
 
-        // Print result in hex (concatenated, no spaces)
-        printf("%016llx", (unsigned long long)result);
+        // // Print result in hex (concatenated, no spaces)
+        // printf("%016llx", (unsigned long long)result);
 
         // Write result as 8 bytes in big-endian order
         for (int i = 7; i >= 0; i--) {
@@ -200,9 +200,9 @@ int main(int argc, char **argv) {
 
         fwrite(block, 1, 8, fp_output);
     }
-
-    printf("\n\nProcessed %d block(s) in %s mode\n", blockNum,
-           (mode == 'e' || mode == 'E') ? "encryption" : "decryption");
+    //
+    // printf("\n\nProcessed %d block(s) in %s mode\n", blockNum,
+    //        (mode == 'e' || mode == 'E') ? "encryption" : "decryption");
 
     fclose(fp_input);
     fclose(fp_output);
