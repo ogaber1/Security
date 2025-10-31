@@ -1,0 +1,7 @@
+.idea/
+CMakeLists.txt
+*.o
+*.exe
+*.out
+*.md
+"@ | Out-File -FilePath .gitignore -Encoding UTF8
